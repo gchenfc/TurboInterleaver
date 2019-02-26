@@ -1,6 +1,5 @@
 !.gitignore
 !README.md
 TurboInterleaver_quartus/*
-# !TurboInterleaver_quartus
 !*.v
 !*.vhd

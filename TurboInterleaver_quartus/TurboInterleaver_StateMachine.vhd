@@ -36,10 +36,6 @@ architecture arch1 of TurboInterleaver_StateMachine is
 			look_now:					out std_logic
 		);
 	END component;
-	
-
-	signal CRC_out_sig:							std_logic_vector (15 DOWNTO 0);
-	signal init_sig, compute_enable_sig:	std_logic;
 
 begin
 

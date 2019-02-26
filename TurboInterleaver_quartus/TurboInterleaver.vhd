@@ -14,7 +14,7 @@ end TurboInterleaver;
 
 architecture arch1 of TurboInterleaver is
 
-	component crc16r1
+	component TurboInterleaver_StateMachine
 		PORT (
 			Clock		: IN		STD_LOGIC;
 			Reset		: IN		STD_LOGIC;
@@ -25,21 +25,17 @@ architecture arch1 of TurboInterleaver is
 		);
 	END component;
 	
-	component CRCcheckFSM
+	component TurboInterleaver_Interleaver
 		PORT (
-			clk:							in std_logic;
-			reset_async:				in std_logic;
-			receive_data_valid:		in std_logic;
-			CRC_out:						in std_logic_vector (15 DOWNTO 0);
-			init, compute_enable:	out std_logic;
-			check_result:				out std_logic;
-			look_now:					out std_logic
+
+			clk, reset_async:			in std_logic;
+
+			dataBufferIn_short:			in std_logic_vector(1055 DOWNTO 0);
+			dataBufferIn_long:			in std_logic_vector(6143 DOWNTO 0);
+			dataBufferOut_short:		out std_logic_vector(1055 DOWNTO 0);
+			dataBufferOut_long:			out std_logic_vector(6143 DOWNTO 0)
 		);
 	END component;
-	
-
-	signal CRC_out_sig:							std_logic_vector (15 DOWNTO 0);
-	signal init_sig, compute_enable_sig:	std_logic;
 
 begin
 
