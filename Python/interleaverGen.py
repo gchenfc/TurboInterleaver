@@ -5,11 +5,10 @@ use ieee.std_logic_1164.all;
 entity TurboInterleaver_Interleaver is
 	port (
 		clk, reset_async:			in std_logic;
+		flag_long:					in std_logic;
 
-		dataBufferIn_short:			in std_logic_vector(1055 DOWNTO 0);
-		dataBufferIn_long:			in std_logic_vector(6143 DOWNTO 0);
-		dataBufferOut_short:		out std_logic_vector(1055 DOWNTO 0);
-		dataBufferOut_long:			out std_logic_vector(6143 DOWNTO 0)
+		dataBufferIn:			in std_logic_vector(6143 DOWNTO 0);
+		dataBufferOut:			out std_logic_vector(6143 DOWNTO 0)
 	);
 end TurboInterleaver_Interleaver;
 
@@ -37,16 +36,30 @@ def interleaverIndexF(K,i):
 	return (f1*i+f2*i) % K
 
 def main():
+	longIndsCheck = [0 for x in range(6144)];
+	shortIndsCheck = [0 for x in range(6144)];
 	f = open("TurboInterleaver_Interleaver.vhd", "w")
 	f.write(skeleton_begin)
-	for K in [1056,6144]:
-		for i in range(K):
-			toWrite = '\tdataBufferOut_{lflag}({0:4}) <= dataBufferIn_{lflag}({1:4});\n'.format(
-				interleaverIndexF(K,i),
-				i,
-				lflag = "short" if K==1056 else "long")
-			f.write(toWrite)
+	for i in range(6144-1056):
+		toWrite = "\tdataBufferOut({0:4}) <= dataBufferIn({1:4}) when (flag_long='1') else '0';\n".format(
+			i,
+			interleaverIndexF(6144,i))
+		longIndsCheck[interleaverIndexF(6144,i)] = 1;
+		f.write(toWrite)
+	for i in range (6144-1056 , 6144):
+		toWrite = "\tdataBufferOut({0:4}) <= dataBufferIn({1:4}) when (flag_long='1') else dataBufferIn({2:4});\n".format(
+			i,
+			interleaverIndexF(6144,i),
+			interleaverIndexF(1056,i-(6144-1056))+(6144-1056))
+		longIndsCheck[interleaverIndexF(6144,i)] = 1;
+		shortIndsCheck[interleaverIndexF(1056,i-(6144-1056))+(6144-1056)] = 1;
+		f.write(toWrite)
 	f.write(skeleton_end)
+
+	print(sum(longIndsCheck))
+	print(sum(shortIndsCheck[6144-1056:6144]))
+	print(max(longIndsCheck))
+	print(max(shortIndsCheck))
 
 if __name__ == '__main__':
 	main()

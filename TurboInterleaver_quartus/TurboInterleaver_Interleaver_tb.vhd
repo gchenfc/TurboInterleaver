@@ -48,11 +48,6 @@ BEGIN
 
 	clk <= '0';
 
-	reset_async <= '1';
-
-	dataBufferIn_short <=  (0 => '1', others=>'0');
-	dataBufferIn_long <=  (0 => '1', others=>'0');
-
 	-- Specify 10 ns clock
 
 	clock: process
@@ -81,31 +76,23 @@ BEGIN
 
 		wait for 40 ns;
 
-		--dataBufferIn_long (5 DOWNTO 0) <= "000010";
-		--dataBufferIn_short(5 DOWNTO 0) <= "000010";
+		dataBufferIn_long (5 DOWNTO 0) <= "000010";
+		dataBufferIn_short(5 DOWNTO 0) <= "000010";
 
 		wait for 40 ns;
 
-		dataBufferIn_long <= (0 => '0', 
-							  1 => '1', others=>'0');
-		dataBufferIn_short<= (0 => '0', 
-							  1 => '1', others=>'0');
+		dataBufferIn_long (5 DOWNTO 0) <= "000100";
+		dataBufferIn_short(5 DOWNTO 0) <= "000100";
 
 		wait for 40 ns;
 
-		--dataBufferIn_long (5 DOWNTO 0) <= "001000";
-		--dataBufferIn_short(5 DOWNTO 0) <= "001000";
+		dataBufferIn_long (5 DOWNTO 0) <= "001000";
+		dataBufferIn_short(5 DOWNTO 0) <= "001000";
 
 		wait for 40 ns;
 
-		dataBufferIn_long <= (0 => '0', 
-							  1 => '0', 
-							  2 => '1', others=>'0');
-		dataBufferIn_short<= (0 => '0', 
-							  1 => '0', 
-							  2 => '1', others=>'0');
-
-		wait for 40 ns;
+		dataBufferIn_long (5 DOWNTO 0) <= "010000";
+		dataBufferIn_short(5 DOWNTO 0) <= "010000";
 		
 		assert false
 			report "simulation ended"
