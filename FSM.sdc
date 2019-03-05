@@ -1,0 +1,1 @@
+create_clock -name clock_sig -period 20.000
