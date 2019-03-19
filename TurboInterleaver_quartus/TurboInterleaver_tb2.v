@@ -75,8 +75,8 @@ module TurboInterleaver_tb2();
 					begin
 					counter = 13'b0;
 					bit_stream_in = 1'b1; 
-					end ;
-			end;
+					end
+			end
 			if (~bit_stream_in) 
 				begin
 				if (counter < 1056) 
