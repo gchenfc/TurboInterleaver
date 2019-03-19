@@ -1,6 +1,7 @@
 LIBRARY ieee;
 
 USE ieee.std_logic_1164.all;
+USE ieee.numeric_std.all;
 
 ENTITY TurboInterleaver_tb IS
 
@@ -21,6 +22,15 @@ ARCHITECTURE test OF TurboInterleaver_tb IS
 		);
 	END component;
 
+	component test_input_byte
+		PORT
+		(
+			address		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+			clock		: IN STD_LOGIC  := '1';
+			q		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
+		);
+	end component;
+
 	SIGNAL clk, reset_async: std_logic;
 
 	signal dataIn:				std_logic;
@@ -29,13 +39,8 @@ ARCHITECTURE test OF TurboInterleaver_tb IS
 	signal flag_long_in, look_now_in: std_logic;
 	signal flag_long_out, look_now_out: std_logic;
 
-	type mem_t is array(0 to 132) of std_logic ;
-	signal ram : mem_t;
-	attribute ram_init_file : string;
-	attribute ram_init_file of ram : signal is "../MATLAB/tests/input0.mif";
-	signal ram_out : mem_t;
-	attribute ram_init_file_out : string;
-	attribute ram_init_file_out of ram_out : signal is "../MATLAB/tests/output_expected0.mif";
+	signal counter_tmp:		STD_LOGIC_VECTOR (7 DOWNTO 0);
+	signal q_tmp:		STD_LOGIC_VECTOR (7 DOWNTO 0);
 
 BEGIN
 
@@ -51,6 +56,14 @@ BEGIN
 		flag_long_out	=>	flag_long_out,
 		look_now_out	=>	look_now_out
 	);
+
+	u2 : test_input_byte PORT MAP (
+		address	 => counter_tmp,
+		clock	 => clk,
+		q	 => q_tmp
+	);
+
+	dataIn <= q_tmp(0);
 
 	-- Specify 10 ns clock
 	clock: process
@@ -71,9 +84,9 @@ BEGIN
 				if (counter < 1056) then 
 					if (counter = 0) then
 						look_now_in <= '1';
-						dataIn <= '1';
-					else
-						dataIn <= '0';
+					--	dataIn <= '1';
+					--else
+					--	dataIn <= '0';
 					end if;
 					counter := counter + 1;
 				else
@@ -85,14 +98,16 @@ BEGIN
 			elsif (streamBufferOut) then
 				look_now_in <= '0';
 				if (counter < 1056) then
-					report "actual: " & std_logic'image(dataOut) & "\texpected: " & std_logic'image(ram_out(counter));
+					report "actual: " & std_logic'image(dataOut);
+					--report "actual: " & std_logic'image(dataOut) & "\texpected: " & std_logic'image(ram_out(counter));
 					counter := counter + 1;
 				end if;
 			else
-				dataIn <= '0';
+				--dataIn <= '0';
 				look_now_in <= '0';
 			end if;
 		end if;
+		counter_tmp <= std_logic_vector(to_unsigned(counter,8));
 	end process;
 	flag_long_in <= '0';
 
