@@ -29,17 +29,13 @@ ARCHITECTURE test OF TurboInterleaver_tb IS
 	signal flag_long_in, look_now_in: std_logic;
 	signal flag_long_out, look_now_out: std_logic;
 
-	type mem_t is array(0 to 132) of unsigned (7 downto 0);
+	type mem_t is array(0 to 132) of std_logic ;
 	signal ram : mem_t;
 	attribute ram_init_file : string;
 	attribute ram_init_file of ram : signal is "../MATLAB/tests/input0.mif";
 	signal ram_out : mem_t;
 	attribute ram_init_file_out : string;
 	attribute ram_init_file_out of ram_out : signal is "../MATLAB/tests/output_expected0.mif";
-
-	variable streamBufferIn : boolean := false;
-	variable streamBufferOut : boolean := true;
-	variable counter :	integer := 0;
 
 BEGIN
 
@@ -63,38 +59,53 @@ BEGIN
 		wait for 10 ns;
 		clk <= '1';
 		wait for 10 ns;
-
-		if (streamBufferIn) then
-			if (counter < 1056) then 
-				dataIn := ram(counter);
-				counter := counter + 1;
-			else
-				counter := 0;
-				streamBufferIn := false;
-				streamBufferOut := true;
-			end if;
-		end if;
-		if (streamBufferOut) then
-			if (counter < 1056) then
-				report "actual: " & integer'image(dataOut) & "\texpected: " & integer'image(ram_out(counter));
-				counter := counter + 1;
-			end if;
-		end if;
-
 	end process;
+
+	update: process (clk)
+		variable streamBufferIn : boolean := true;
+		variable streamBufferOut : boolean := false;
+		variable counter :	integer := 0;
+	begin
+		if (rising_edge(clk)) then
+			if (streamBufferIn) then
+				if (counter < 1056) then 
+					if (counter = 0) then
+						look_now_in <= '1';
+						dataIn <= '1';
+					else
+						dataIn <= '0';
+					end if;
+					counter := counter + 1;
+				else
+					look_now_in <= '0';
+					counter := 0;
+					streamBufferIn := false;
+					streamBufferOut := true;
+				end if;
+			elsif (streamBufferOut) then
+				look_now_in <= '0';
+				if (counter < 1056) then
+					report "actual: " & std_logic'image(dataOut) & "\texpected: " & std_logic'image(ram_out(counter));
+					counter := counter + 1;
+				end if;
+			else
+				dataIn <= '0';
+				look_now_in <= '0';
+			end if;
+		end if;
+	end process;
+	flag_long_in <= '0';
 
 	-- Specify Test Vectors
 	stim: process is
 	begin
 		reset_async <= '1';
-		counter <= '0';
 
 		wait for 20 ns;
 
 		reset_async <= '0';
 
 		wait for 20 ns;
-		streamBufferIn := true;
 
 		wait for 100000 ns;
 		
