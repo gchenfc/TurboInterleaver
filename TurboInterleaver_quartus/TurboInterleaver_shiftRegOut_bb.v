@@ -1,4 +1,4 @@
-// megafunction wizard: %LPM_SHIFTREG%
+// megafunction wizard: %LPM_SHIFTREG%VBB%
 // GENERATION: STANDARD
 // VERSION: WM1.0
 // MODULE: LPM_SHIFTREG 
@@ -17,7 +17,6 @@
 // 16.1.0 Build 196 10/24/2016 SJ Lite Edition
 // ************************************************************
 
-
 //Copyright (C) 2016  Intel Corporation. All rights reserved.
 //Your use of Intel Corporation's design tools, logic functions 
 //and other software and tools, and its AMPP partner logic 
@@ -33,85 +32,22 @@
 //authorized distributors.  Please refer to the applicable 
 //agreement for further details.
 
-
-//lpm_shiftreg LPM_DIRECTION="RIGHT" LPM_WIDTH=6144 aclr clock data load shiftout
-//VERSION_BEGIN 16.1 cbx_lpm_shiftreg 2016:10:24:15:04:16:SJ cbx_mgl 2016:10:24:15:05:03:SJ  VERSION_END
-// synthesis VERILOG_INPUT_VERSION VERILOG_2001
-// altera message_off 10463
-
-
-//synthesis_resources = lut 6144 
-//synopsys translate_off
-`timescale 1 ps / 1 ps
-//synopsys translate_on
-module  TurboInterleaver_shiftRegOut_shift_reg
-	( 
-	aclr,
-	clock,
-	data,
-	load,
-	shiftout) /* synthesis synthesis_clearbox=1 */;
-	input   aclr;
-	input   clock;
-	input   [6143:0]  data;
-	input   load;
-	output   shiftout;
-`ifndef ALTERA_RESERVED_QIS
-// synopsys translate_off
-`endif
-	tri0   aclr;
-	tri0   [6143:0]  data;
-	tri0   load;
-`ifndef ALTERA_RESERVED_QIS
-// synopsys translate_on
-`endif
-
-	reg	[6143:0]	shift_reg;
-	wire  [6143:0]  shift_node;
-	wire shiftin;
-
-	// synopsys translate_off
-	initial
-		shift_reg = 0;
-	// synopsys translate_on
-	always @ ( posedge clock or  posedge aclr)
-		if (aclr == 1'b1) shift_reg <= 6144'b0;
-		else
-			if (load == 1'b1) shift_reg <= data;
-			else  shift_reg <= shift_node;
-	assign
-		shift_node = {shiftin, shift_reg[6143:1]},
-		shiftin = 1'b1,
-		shiftout = shift_reg[0];
-endmodule //TurboInterleaver_shiftRegOut_shift_reg
-//VALID FILE
-
-
-// synopsys translate_off
-`timescale 1 ps / 1 ps
-// synopsys translate_on
 module TurboInterleaver_shiftRegOut (
 	aclr,
 	clock,
 	data,
 	load,
-	shiftout)/* synthesis synthesis_clearbox = 1 */;
+	shiftin,
+	q,
+	shiftout);
 
 	input	  aclr;
 	input	  clock;
 	input	[6143:0]  data;
 	input	  load;
+	input	  shiftin;
+	output	[6143:0]  q;
 	output	  shiftout;
-
-	wire  sub_wire0;
-	wire  shiftout = sub_wire0;
-
-	TurboInterleaver_shiftRegOut_shift_reg	TurboInterleaver_shiftRegOut_shift_reg_component (
-				.aclr (aclr),
-				.clock (clock),
-				.data (data),
-				.load (load),
-				.shiftout (sub_wire0));
 
 endmodule
 
@@ -126,13 +62,13 @@ endmodule
 // Retrieval info: PRIVATE: INTENDED_DEVICE_FAMILY STRING "Cyclone IV E"
 // Retrieval info: PRIVATE: LeftShift NUMERIC "0"
 // Retrieval info: PRIVATE: ParallelDataInput NUMERIC "1"
-// Retrieval info: PRIVATE: Q_OUT NUMERIC "0"
+// Retrieval info: PRIVATE: Q_OUT NUMERIC "1"
 // Retrieval info: PRIVATE: SCLR NUMERIC "0"
 // Retrieval info: PRIVATE: SLOAD NUMERIC "1"
 // Retrieval info: PRIVATE: SSET NUMERIC "0"
 // Retrieval info: PRIVATE: SSET_ALL1 NUMERIC "1"
-// Retrieval info: PRIVATE: SYNTH_WRAPPER_GEN_POSTFIX STRING "1"
-// Retrieval info: PRIVATE: SerialShiftInput NUMERIC "0"
+// Retrieval info: PRIVATE: SYNTH_WRAPPER_GEN_POSTFIX STRING "0"
+// Retrieval info: PRIVATE: SerialShiftInput NUMERIC "1"
 // Retrieval info: PRIVATE: SerialShiftOutput NUMERIC "1"
 // Retrieval info: PRIVATE: nBit NUMERIC "6144"
 // Retrieval info: PRIVATE: new_diagram STRING "1"
@@ -144,17 +80,20 @@ endmodule
 // Retrieval info: USED_PORT: clock 0 0 0 0 INPUT NODEFVAL "clock"
 // Retrieval info: USED_PORT: data 0 0 6144 0 INPUT NODEFVAL "data[6143..0]"
 // Retrieval info: USED_PORT: load 0 0 0 0 INPUT NODEFVAL "load"
+// Retrieval info: USED_PORT: q 0 0 6144 0 OUTPUT NODEFVAL "q[6143..0]"
+// Retrieval info: USED_PORT: shiftin 0 0 0 0 INPUT NODEFVAL "shiftin"
 // Retrieval info: USED_PORT: shiftout 0 0 0 0 OUTPUT NODEFVAL "shiftout"
 // Retrieval info: CONNECT: @aclr 0 0 0 0 aclr 0 0 0 0
 // Retrieval info: CONNECT: @clock 0 0 0 0 clock 0 0 0 0
 // Retrieval info: CONNECT: @data 0 0 6144 0 data 0 0 6144 0
 // Retrieval info: CONNECT: @load 0 0 0 0 load 0 0 0 0
+// Retrieval info: CONNECT: @shiftin 0 0 0 0 shiftin 0 0 0 0
+// Retrieval info: CONNECT: q 0 0 6144 0 @q 0 0 6144 0
 // Retrieval info: CONNECT: shiftout 0 0 0 0 @shiftout 0 0 0 0
 // Retrieval info: GEN_FILE: TYPE_NORMAL TurboInterleaver_shiftRegOut.v TRUE
 // Retrieval info: GEN_FILE: TYPE_NORMAL TurboInterleaver_shiftRegOut.inc FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL TurboInterleaver_shiftRegOut.cmp TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL TurboInterleaver_shiftRegOut.bsf FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL TurboInterleaver_shiftRegOut_inst.v TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL TurboInterleaver_shiftRegOut_bb.v FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL TurboInterleaver_shiftRegOut_syn.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL TurboInterleaver_shiftRegOut.cmp FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL TurboInterleaver_shiftRegOut.bsf TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL TurboInterleaver_shiftRegOut_inst.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL TurboInterleaver_shiftRegOut_bb.v TRUE
 // Retrieval info: LIB_FILE: lpm

@@ -16,31 +16,37 @@ ARCHITECTURE test OF TurboInterleaver_tb IS
 
 			dataIn:				in std_logic;
 			dataOut:				out std_logic;
+			dataOut2:				out std_logic;
 			
 			flag_long_in, look_now_in: in std_logic;
 			flag_long_out, look_now_out: out std_logic
 		);
 	END component;
 
-	component test_input_byte
-		PORT
-		(
-			address		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
-			clock		: IN STD_LOGIC  := '1';
-			q		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
-		);
-	end component;
+	--component test_input_byte
+	--	PORT
+	--	(
+	--		address		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+	--		clock		: IN STD_LOGIC  := '1';
+	--		q		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
+	--	);
+	--end component;
 
 	SIGNAL clk, reset_async: std_logic;
 
-	signal dataIn:				std_logic;
-	signal dataOut:				std_logic;
+	signal dataIn:				std_logic := '0';
+	signal dataOut:				std_logic := '0';
+	signal dataOut2:				std_logic := '0';
 	
-	signal flag_long_in, look_now_in: std_logic;
+	signal flag_long_in, look_now_in: std_logic := '0';
 	signal flag_long_out, look_now_out: std_logic;
 
-	signal counter_tmp:		STD_LOGIC_VECTOR (7 DOWNTO 0);
-	signal q_tmp:		STD_LOGIC_VECTOR (7 DOWNTO 0);
+	signal counter_tmp:		STD_LOGIC_VECTOR (12 DOWNTO 0);
+	signal q_tmp:		STD_LOGIC_VECTOR (1055 DOWNTO 0);
+	signal q_out:		STD_LOGIC_VECTOR (6143 DOWNTO 0) := (others => '0');
+	signal q_out2:		STD_LOGIC_VECTOR (6143 DOWNTO 0) := (others => '0');
+
+	signal counter_output:	STD_LOGIC_VECTOR (31 DOWNTO 0);
 
 BEGIN
 
@@ -50,6 +56,7 @@ BEGIN
 
 		dataIn	=>	dataIn,
 		dataOut	=>	dataOut,
+		dataOut2	=>	dataOut2,
 
 		flag_long_in	=>	flag_long_in,
 		look_now_in	=>	look_now_in,
@@ -57,13 +64,14 @@ BEGIN
 		look_now_out	=>	look_now_out
 	);
 
-	u2 : test_input_byte PORT MAP (
-		address	 => counter_tmp,
-		clock	 => clk,
-		q	 => q_tmp
-	);
+	--u2 : test_input_byte PORT MAP (
+	--	address	 => counter_tmp,
+	--	clock	 => clk,
+	--	q	 => q_tmp
+	--);
 
-	dataIn <= q_tmp(0);
+	--dataIn <= q_tmp(0);
+	q_tmp <= (1 => '1', others => '0');
 
 	-- Specify 10 ns clock
 	clock: process
@@ -78,36 +86,50 @@ BEGIN
 		variable streamBufferIn : boolean := true;
 		variable streamBufferOut : boolean := false;
 		variable counter :	integer := 0;
+		variable counter_out : integer := 0;
 	begin
-		if (rising_edge(clk)) then
-			if (streamBufferIn) then
-				if (counter < 1056) then 
-					if (counter = 0) then
+		if (reset_async='0') then
+			if (rising_edge(clk)) then
+				if (streamBufferIn) then
+					if (counter < 1055) then 
 						look_now_in <= '1';
-					--	dataIn <= '1';
-					--else
-					--	dataIn <= '0';
+						dataIn <= q_tmp(counter);
+						counter := counter + 1;
+					else
+						dataIn <= q_tmp(counter);
+						--dataIn <= '0';
+						look_now_in <= '1';
+						counter := 6143;
+						streamBufferIn := false;
+						streamBufferOut := true;
 					end if;
-					counter := counter + 1;
-				else
+				elsif (streamBufferOut) then
+					dataIn <= '0';
 					look_now_in <= '0';
-					counter := 0;
-					streamBufferIn := false;
-					streamBufferOut := true;
+					if (counter > 0) then
+						q_out(counter) <= dataOut;
+						q_out2(counter) <= dataOut2;
+						--report "actual: " & std_logic'image(dataOut);
+						--report "actual: " & std_logic'image(dataOut) & "\texpected: " & std_logic'image(ram_out(counter));
+						counter := counter - 1;
+					else
+						q_out(counter) <= dataOut;
+						q_out2(counter) <= dataOut2;
+						-- do nothing
+					end if;
+				else
+					--dataIn <= '0';
+					look_now_in <= '0';
 				end if;
-			elsif (streamBufferOut) then
-				look_now_in <= '0';
-				if (counter < 1056) then
-					report "actual: " & std_logic'image(dataOut);
-					--report "actual: " & std_logic'image(dataOut) & "\texpected: " & std_logic'image(ram_out(counter));
-					counter := counter + 1;
+				if (look_now_out = '1') then
+					counter_out := 0;
+				else
+					counter_out := counter_out + 1;
 				end if;
-			else
-				--dataIn <= '0';
-				look_now_in <= '0';
 			end if;
+			counter_tmp <= std_logic_vector(to_unsigned(counter,13));
+			counter_output <= std_logic_vector(to_unsigned(counter_out,32));
 		end if;
-		counter_tmp <= std_logic_vector(to_unsigned(counter,8));
 	end process;
 	flag_long_in <= '0';
 
@@ -122,7 +144,7 @@ BEGIN
 
 		wait for 20 ns;
 
-		wait for 100000 ns;
+		wait for 150000 ns;
 		
 		assert false
 			report "simulation ended"
@@ -133,7 +155,7 @@ BEGIN
 
 	stop_simulation :process
 	begin
-		wait for 10000 ns; --run the simulation for this duration
+		wait for 150000 ns; --run the simulation for this duration
 		assert false
 			report "simulation ended"
 			severity failure;
