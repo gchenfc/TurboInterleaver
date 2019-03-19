@@ -39,14 +39,14 @@ ARCHITECTURE test OF TurboInterleaver_tb IS
 	signal dataOut2:				std_logic := '0';
 	
 	signal flag_long_in, look_now_in: std_logic := '0';
-	signal flag_long_out, look_now_out: std_logic;
+	signal flag_long_out, look_now_out: std_logic := '0';
 
-	signal counter_tmp:		STD_LOGIC_VECTOR (12 DOWNTO 0);
-	signal q_tmp:		STD_LOGIC_VECTOR (1055 DOWNTO 0);
+	signal counter_tmp:		STD_LOGIC_VECTOR (12 DOWNTO 0) := (others => '0');
+	signal q_tmp:		STD_LOGIC_VECTOR (1055 DOWNTO 0) := (others => '0');
 	signal q_out:		STD_LOGIC_VECTOR (6143 DOWNTO 0) := (others => '0');
 	signal q_out2:		STD_LOGIC_VECTOR (6143 DOWNTO 0) := (others => '0');
 
-	signal counter_output:	STD_LOGIC_VECTOR (31 DOWNTO 0);
+	signal counter_output:	STD_LOGIC_VECTOR (31 DOWNTO 0) := (others => '0');
 
 BEGIN
 
@@ -86,35 +86,38 @@ BEGIN
 		variable streamBufferIn : boolean := true;
 		variable streamBufferOut : boolean := false;
 		variable counter :	integer := 0;
+		variable counter_next :	integer := 0;
 		variable counter_out : integer := 0;
 	begin
 		if (reset_async='0') then
 			if (rising_edge(clk)) then
+				counter := counter_next;
 				if (streamBufferIn) then
-					if (counter < 1055) then 
+					if (counter = 0) then
 						look_now_in <= '1';
 						dataIn <= q_tmp(counter);
-						counter := counter + 1;
+						counter_next := counter + 1;
+					elsif (counter < 1056) then 
+						look_now_in <= '0';
+						dataIn <= q_tmp(counter);
+						counter_next := counter + 1;
 					else
-						dataIn <= q_tmp(counter);
 						--dataIn <= '0';
-						look_now_in <= '1';
-						counter := 6143;
+						look_now_in <= '0';
+						counter_next := 0;
 						streamBufferIn := false;
 						streamBufferOut := true;
 					end if;
 				elsif (streamBufferOut) then
 					dataIn <= '0';
 					look_now_in <= '0';
-					if (counter > 0) then
+					if (counter < 6144) then
 						q_out(counter) <= dataOut;
 						q_out2(counter) <= dataOut2;
 						--report "actual: " & std_logic'image(dataOut);
 						--report "actual: " & std_logic'image(dataOut) & "\texpected: " & std_logic'image(ram_out(counter));
-						counter := counter - 1;
+						counter_next := counter + 1;
 					else
-						q_out(counter) <= dataOut;
-						q_out2(counter) <= dataOut2;
 						-- do nothing
 					end if;
 				else
@@ -144,7 +147,7 @@ BEGIN
 
 		wait for 20 ns;
 
-		wait for 150000 ns;
+		wait for 250000 ns;
 		
 		assert false
 			report "simulation ended"
@@ -155,7 +158,7 @@ BEGIN
 
 	stop_simulation :process
 	begin
-		wait for 150000 ns; --run the simulation for this duration
+		wait for 250000 ns; --run the simulation for this duration
 		assert false
 			report "simulation ended"
 			severity failure;

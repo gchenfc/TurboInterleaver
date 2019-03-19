@@ -40,24 +40,24 @@ def main():
 	shortIndsCheck = [0 for x in range(6144)];
 	f = open("TurboInterleaver_Interleaver.vhd", "w")
 	f.write(skeleton_begin)
-	for i in range(6144-1056):
+	for i in range(1056):
+		toWrite = "\tdataBufferOut({0:4}) <= dataBufferIn({1:4}) when (flag_long='1') else dataBufferIn({2:4});\n".format(
+			i,
+			interleaverIndexF(6144,i),
+			interleaverIndexF(1056,i))
+		longIndsCheck[interleaverIndexF(6144,i)] = 1;
+		shortIndsCheck[interleaverIndexF(1056,i)] = 1;
+		f.write(toWrite)
+	for i in range (1056 , 6144):
 		toWrite = "\tdataBufferOut({0:4}) <= dataBufferIn({1:4}) when (flag_long='1') else '0';\n".format(
 			i,
 			interleaverIndexF(6144,i))
 		longIndsCheck[interleaverIndexF(6144,i)] = 1;
 		f.write(toWrite)
-	for i in range (6144-1056 , 6144):
-		toWrite = "\tdataBufferOut({0:4}) <= dataBufferIn({1:4}) when (flag_long='1') else dataBufferIn({2:4});\n".format(
-			i,
-			interleaverIndexF(6144,i),
-			interleaverIndexF(1056,i-(6144-1056))+(6144-1056))
-		longIndsCheck[interleaverIndexF(6144,i)] = 1;
-		shortIndsCheck[interleaverIndexF(1056,i-(6144-1056))+(6144-1056)] = 1;
-		f.write(toWrite)
 	f.write(skeleton_end)
 
 	print(sum(longIndsCheck))
-	print(sum(shortIndsCheck[6144-1056:6144]))
+	print(sum(shortIndsCheck))
 	print(max(longIndsCheck))
 	print(max(shortIndsCheck))
 
