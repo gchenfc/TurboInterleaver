@@ -34,6 +34,59 @@
 //agreement for further details.
 
 
+//lpm_shiftreg LPM_DIRECTION="RIGHT" LPM_WIDTH=6144 aclr clock data load shiftout
+//VERSION_BEGIN 16.1 cbx_lpm_shiftreg 2016:10:24:15:04:16:SJ cbx_mgl 2016:10:24:15:05:03:SJ  VERSION_END
+// synthesis VERILOG_INPUT_VERSION VERILOG_2001
+// altera message_off 10463
+
+
+//synthesis_resources = lut 6144 
+//synopsys translate_off
+`timescale 1 ps / 1 ps
+//synopsys translate_on
+module  TurboInterleaver_shiftRegOut_syn_shift_reg
+	( 
+	aclr,
+	clock,
+	data,
+	load,
+	shiftout) /* synthesis synthesis_clearbox=1 */;
+	input   aclr;
+	input   clock;
+	input   [6143:0]  data;
+	input   load;
+	output   shiftout;
+`ifndef ALTERA_RESERVED_QIS
+// synopsys translate_off
+`endif
+	tri0   aclr;
+	tri0   [6143:0]  data;
+	tri0   load;
+`ifndef ALTERA_RESERVED_QIS
+// synopsys translate_on
+`endif
+
+	reg	[6143:0]	shift_reg;
+	wire  [6143:0]  shift_node;
+	wire shiftin;
+
+	// synopsys translate_off
+	initial
+		shift_reg = 0;
+	// synopsys translate_on
+	always @ ( posedge clock or  posedge aclr)
+		if (aclr == 1'b1) shift_reg <= 6144'b0;
+		else
+			if (load == 1'b1) shift_reg <= data;
+			else  shift_reg <= shift_node;
+	assign
+		shift_node = {shiftin, shift_reg[6143:1]},
+		shiftin = 1'b1,
+		shiftout = shift_reg[0];
+endmodule //TurboInterleaver_shiftRegOut_syn_shift_reg
+//VALID FILE
+
+
 // synopsys translate_off
 `timescale 1 ps / 1 ps
 // synopsys translate_on
@@ -42,7 +95,7 @@ module TurboInterleaver_shiftRegOut_syn (
 	clock,
 	data,
 	load,
-	shiftout);
+	shiftout)/* synthesis synthesis_clearbox = 1 */;
 
 	input	  aclr;
 	input	  clock;
@@ -53,27 +106,12 @@ module TurboInterleaver_shiftRegOut_syn (
 	wire  sub_wire0;
 	wire  shiftout = sub_wire0;
 
-	lpm_shiftreg	LPM_SHIFTREG_component (
+	TurboInterleaver_shiftRegOut_syn_shift_reg	TurboInterleaver_shiftRegOut_syn_shift_reg_component (
 				.aclr (aclr),
 				.clock (clock),
 				.data (data),
 				.load (load),
-				.shiftout (sub_wire0)
-				// synopsys translate_off
-				,
-				.aset (),
-				.enable (),
-				.q (),
-				.sclr (),
-				.shiftin (),
-				.sset ()
-				// synopsys translate_on
-				);
-	defparam
-		LPM_SHIFTREG_component.lpm_direction = "RIGHT",
-		LPM_SHIFTREG_component.lpm_type = "LPM_SHIFTREG",
-		LPM_SHIFTREG_component.lpm_width = 6144;
-
+				.shiftout (sub_wire0));
 
 endmodule
 

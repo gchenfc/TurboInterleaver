@@ -60,6 +60,19 @@ architecture arch1 of TurboInterleaver is
 		);
 	end component;
 	
+	
+		component input_test PORT ( 
+		address: in std_logic_vector(7 DOWNTO 0);
+		clock : in std_logic;
+		q: out std_logic_vector(7 DOWNTO 0));
+		end component;
+		
+		component output_test PORT ( address: in std_logic_vector(7 DOWNTO 0);
+		clock : in std_logic;
+		q: out std_logic_vector(7 DOWNTO 0));
+		end component;
+
+	
 	-- FSM
 	signal clock_sig		:	std_logic;
 	signal reset_sig		:	std_logic;
@@ -87,8 +100,21 @@ architecture arch1 of TurboInterleaver is
 	signal data_shiftRegOut	: std_logic_vector(6143 DOWNTO 0);
 	signal load_shiftRegOut	: std_logic;
 	signal shiftout_shiftRegOut	: std_logic;
+	
+	signal q_expected: std_logic_vector(7 DOWNTO 0);
+	signal q_in:  std_logic_vector(7 DOWNTO 0);
+	signal addr_in: std_logic_vector(7 DOWNTO 0);
 
 begin
+	IT_inst : input_test PORT MAP (
+		address => addr_in,
+		clock => clk,
+		q => q_in);
+	
+	OT_inst : output_test PORT MAP (
+		address => addr_in,
+		clock => clk,
+		q => q_expected);
 	
 	statemachine_inst: TurboInterleaver_StateMachine PORT MAP (
 			clock_sig => clk		,
