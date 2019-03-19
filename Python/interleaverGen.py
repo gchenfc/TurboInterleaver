@@ -33,7 +33,7 @@ def interleaverIndexF(K,i):
 		raise ValueError('K value not supported.')
 	if ((i>=K) or (i<0)):
 		raise ValueError('index i should be positive and less than K')
-	return (f1*i+f2*i) % K
+	return (f1*i+f2*i*i) % K
 
 def main():
 	longIndsCheck = [0 for x in range(6144)];

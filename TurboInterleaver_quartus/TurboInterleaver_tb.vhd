@@ -42,7 +42,7 @@ ARCHITECTURE test OF TurboInterleaver_tb IS
 	signal flag_long_out, look_now_out: std_logic := '0';
 
 	signal counter_tmp:		STD_LOGIC_VECTOR (12 DOWNTO 0) := (others => '0');
-	signal q_tmp:		STD_LOGIC_VECTOR (1055 DOWNTO 0) := (others => '0');
+	signal q_tmp, q_tmpa:		STD_LOGIC_VECTOR (6143 DOWNTO 0) := (others => '0');
 	signal q_out:		STD_LOGIC_VECTOR (6143 DOWNTO 0) := (others => '0');
 	signal q_out2:		STD_LOGIC_VECTOR (6143 DOWNTO 0) := (others => '0');
 
@@ -72,6 +72,7 @@ BEGIN
 
 	--dataIn <= q_tmp(0);
 	q_tmp <= (1 => '1', others => '0');
+	q_tmpa <= (2 => '1', others => '0');
 
 	-- Specify 10 ns clock
 	clock: process
@@ -88,6 +89,7 @@ BEGIN
 		variable counter :	integer := 0;
 		variable counter_next :	integer := 0;
 		variable counter_out : integer := 0;
+		variable parta : boolean := true;
 	begin
 		if (reset_async='0') then
 			if (rising_edge(clk)) then
@@ -95,18 +97,30 @@ BEGIN
 				if (streamBufferIn) then
 					if (counter = 0) then
 						look_now_in <= '1';
-						dataIn <= q_tmp(counter);
+						if (parta) then
+							dataIn <= q_tmp(counter);
+						else
+							dataIn <= q_tmpa(counter);
+						end if;
 						counter_next := counter + 1;
-					elsif (counter < 1056) then 
+					elsif (counter < 6144) then 
 						look_now_in <= '0';
-						dataIn <= q_tmp(counter);
+						if (parta) then
+							dataIn <= q_tmp(counter);
+						else
+							dataIn <= q_tmpa(counter);
+						end if;
 						counter_next := counter + 1;
 					else
 						--dataIn <= '0';
 						look_now_in <= '0';
 						counter_next := 0;
-						streamBufferIn := false;
-						streamBufferOut := true;
+						if (parta) then
+							parta := false;
+						else
+							streamBufferIn := false;
+							streamBufferOut := true;
+						end if;
 					end if;
 				elsif (streamBufferOut) then
 					dataIn <= '0';
@@ -147,7 +161,7 @@ BEGIN
 
 		wait for 20 ns;
 
-		wait for 250000 ns;
+		wait for 400000 ns;
 		
 		assert false
 			report "simulation ended"
@@ -158,7 +172,7 @@ BEGIN
 
 	stop_simulation :process
 	begin
-		wait for 250000 ns; --run the simulation for this duration
+		wait for 400000 ns; --run the simulation for this duration
 		assert false
 			report "simulation ended"
 			severity failure;
