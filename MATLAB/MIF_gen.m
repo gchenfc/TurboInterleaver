@@ -38,7 +38,7 @@ function [] = MIF_gen(filename, values, word_size, ram_size)
     fprintf( fileID, '%s%d%s\n\n', 'DEPTH=', ram_size, ';');
     fprintf( fileID, '%s\n', 'ADDRESS_RADIX=HEX;');
     fprintf( fileID, '%s\n\n', 'DATA_RADIX=HEX;');
-    fprintf( fileID, '%s\n', 'CONTENT BEGIN');
+    fprintf( fileID, '%s\n', 'CONTENT BEGIN;');
 
     % data format
     fdata = int2str(word_size/4);
@@ -47,7 +47,7 @@ function [] = MIF_gen(filename, values, word_size, ram_size)
     for i = 2:(word_size/8)
         format_str = strcat(format_str,'%02X');
     end
-    format_str = strcat(format_str,'\n');
+    format_str = strcat(format_str,';\n');
 
     % write values to file
     idx = 0;
