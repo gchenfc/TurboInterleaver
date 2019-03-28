@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+   use IEEE.numeric_std.all;
 
 entity TurboInterleaver is
 	port (
@@ -85,14 +86,14 @@ architecture arch1 of TurboInterleaver is
 		
 	end component;
 	
-	component byte_to_bit
-		PORT
-		(
-			clock		: IN STD_LOGIC ;
-			shiftin		: IN STD_LOGIC ;
-			q		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
-			shiftout		: OUT STD_LOGIC 
-		);
+	component bytes_to_bits
+	PORT
+	(
+		clock		: IN STD_LOGIC ;
+		data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+		load		: IN STD_LOGIC ;
+		shiftout		: OUT STD_LOGIC 
+	);
 	end component;
 	
 	signal bit_output: STD_LOGIC;
@@ -156,9 +157,13 @@ architecture arch1 of TurboInterleaver is
 	signal shiftin_shiftRegOutLook : std_logic;
 	signal shiftout_shiftRegOutLook	: std_logic;
 	
+	signal counter_byte: UNSIGNED(7 DOWNTO 0);
+		
+	
+	
 begin
 
-	variable counter_byte = '0';
+
 
 	
 	--statemachine_inst: TurboInterleaver_StateMachine PORT MAP (
@@ -174,12 +179,14 @@ begin
 	--		debug_out_q => debug_out_q	
 	--	);
 	
-	bit_to_byte_inst: bit_to_byte PORT MAP(
-		clock => clk,
-		dataIn => shiftIn,
-		q => byte_output,
-		shift_out=> bit_output
+bytes_to_bits_inst : bytes_to_bits PORT MAP (
+		clock	 => clk,
+		data	 => dataIn,
+		load	 => '1',
+		shiftout	 => bit_output
 	);
+
+
 
 	shiftRegIn_inst: TurboInterleaver_shiftRegIn PORT MAP (
 				clock => clk,
@@ -254,20 +261,22 @@ begin
 
 	qIn_shiftRegOut <= '0';
 	qIn_shiftRegOut2 <= '0';
+	
 
 	shiftin_shiftRegIn <= bit_output;
 
 	flag_long_interleaver <= shiftout_shiftRegInFlag;
-	byte_process : process (clk, shiftout_shiftRegInLook, q_shiftRegIn)
+	byte_process : process (clk, counter_byte)
 	begin
 		if (clk='1') then
-			if (counter_byte>=8) then 
+			if (counter_byte ="00001000") then 
 				dataInNext <= '1';
-				counter_byte=0;
+				counter_byte <= "00000000";
 			else
 				dataInNext <= '0';
-				counter_byte = counter_byte+ 1;
+				counter_byte <= counter_byte + "00000001";
 			end if;
+		end if;
 	end process;
 	
 	-- register input stream on look-now
