@@ -4,7 +4,8 @@ use ieee.std_logic_1164.all;
 entity TurboInterleaver is
 	port (
 		clk, reset_async:			in std_logic;
-		dataIn:				in std_logic;
+		dataIn:				in std_logic_vector(7 DOWNTO 0);
+		dataInNext: out std_logic;
 		dataOut:				out std_logic;
 		dataOut2:				out std_logic;
 		
@@ -81,7 +82,21 @@ architecture arch1 of TurboInterleaver is
 			shiftin		: IN STD_LOGIC ;
 			shiftout		: OUT STD_LOGIC 
 		);
+		
 	end component;
+	
+	component byte_to_bit
+		PORT
+		(
+			clock		: IN STD_LOGIC ;
+			shiftin		: IN STD_LOGIC ;
+			q		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
+			shiftout		: OUT STD_LOGIC 
+		);
+	end component;
+	
+	signal bit_output: STD_LOGIC;
+	signal byte_output: STD_LOGIC_VECTOR (7 DOWNTO 0); 
 	
 	---- FSM
 	--signal clock_sig		:	std_logic;
@@ -140,8 +155,11 @@ architecture arch1 of TurboInterleaver is
 	signal load_shiftRegOutLook	: std_logic;
 	signal shiftin_shiftRegOutLook : std_logic;
 	signal shiftout_shiftRegOutLook	: std_logic;
-
+	
 begin
+
+	variable counter_byte = '0';
+
 	
 	--statemachine_inst: TurboInterleaver_StateMachine PORT MAP (
 	--		clock_sig => clk		,
@@ -155,6 +173,13 @@ begin
 	--		out_long_sig => out_long_sig	,
 	--		debug_out_q => debug_out_q	
 	--	);
+	
+	bit_to_byte_inst: bit_to_byte PORT MAP(
+		clock => clk,
+		dataIn => shiftIn,
+		q => byte_output,
+		shift_out=> bit_output
+	);
 
 	shiftRegIn_inst: TurboInterleaver_shiftRegIn PORT MAP (
 				clock => clk,
@@ -230,16 +255,28 @@ begin
 	qIn_shiftRegOut <= '0';
 	qIn_shiftRegOut2 <= '0';
 
-	shiftin_shiftRegIn <= dataIn;
+	shiftin_shiftRegIn <= bit_output;
 
 	flag_long_interleaver <= shiftout_shiftRegInFlag;
-
+	byte_process : process (clk, shiftout_shiftRegInLook, q_shiftRegIn)
+	begin
+		if (clk='1') then
+			if (counter_byte>=8) then 
+				dataInNext <= '1';
+				counter_byte=0;
+			else
+				dataInNext <= '0';
+				counter_byte = counter_byte+ 1;
+			end if;
+	end process;
+	
 	-- register input stream on look-now
 	regIn : process (clk, shiftout_shiftRegInLook, q_shiftRegIn)
 	begin
 		if (clk='1') then
 			if (shiftout_shiftRegInLook='1') then
 				dataBufferIn(6143 DOWNTO 0) <= q_shiftRegIn(6143 DOWNTO 0);
+				
 			else
 				dataBufferIn(6143 DOWNTO 0) <= dataBufferIn(6143 DOWNTO 0);
 			end if;
