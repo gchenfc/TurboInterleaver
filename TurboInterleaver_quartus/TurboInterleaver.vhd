@@ -31,6 +31,16 @@ architecture arch1 of TurboInterleaver is
 	--		debug_out_q				:	out std_logic_vector (12 downto 0)
 	--	);
 	--END component;
+
+	component bytes_to_bits
+	PORT
+	(
+		clock		: IN STD_LOGIC ;
+		data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+		load		: IN STD_LOGIC ;
+		shiftout		: OUT STD_LOGIC 
+	);
+	end component;
 	
 	component TurboInterleaver_Interleaver
 		PORT (
@@ -61,6 +71,14 @@ architecture arch1 of TurboInterleaver is
 			shiftout		: OUT STD_LOGIC 
 		);
 	end component;
+	component delay1
+		PORT
+		(
+			clock		: IN STD_LOGIC ;
+			shiftin		: IN STD_LOGIC ;
+			shiftout		: OUT STD_LOGIC 
+		);
+	end component;
 	component TurboInterleaver_shiftRegOut
 		PORT
 		(
@@ -86,19 +104,6 @@ architecture arch1 of TurboInterleaver is
 		
 	end component;
 	
-	component bytes_to_bits
-	PORT
-	(
-		clock		: IN STD_LOGIC ;
-		data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
-		load		: IN STD_LOGIC ;
-		shiftout		: OUT STD_LOGIC 
-	);
-	end component;
-	
-	signal bit_output: STD_LOGIC;
-	signal byte_output: STD_LOGIC_VECTOR (7 DOWNTO 0); 
-	
 	---- FSM
 	--signal clock_sig		:	std_logic;
 	--signal reset_sig		:	std_logic;
@@ -110,7 +115,11 @@ architecture arch1 of TurboInterleaver is
 	--signal out_looknow_sig: 	std_logic;
 	--signal out_long_sig	:	std_logic;
 	--signal debug_out_q				:	std_logic_vector (12 downto 0);
-	
+
+	-- byte to bit serial
+	signal bit_dataIn: 		STD_LOGIC;
+	signal load_dataIn: 	std_logic;
+
 	-- shiftRegIn
 	signal aclr_shiftRegIn	:	std_logic;
 	signal shiftin_shiftRegIn	:	std_logic;
@@ -126,9 +135,12 @@ architecture arch1 of TurboInterleaver is
 
 	-- interleaver
 	signal flag_long_interleaver : std_logic;
-	signal dataBufferIn : std_logic_vector(6143 DOWNTO 0) := (others => '0');
-	signal dataBufferOut : std_logic_vector(6143 DOWNTO 0) := (others => '0');
-	signal dataBufferOut2 : std_logic_vector(6143 DOWNTO 0) := (others => '0');
+	signal dataBufferIn_interleaver : std_logic_vector(6143 DOWNTO 0) := (others => '0');
+	signal dataBufferOut_interleaver : std_logic_vector(6143 DOWNTO 0) := (others => '0');
+	signal dataBufferOut2_interleaver : std_logic_vector(6143 DOWNTO 0) := (others => '0');
+
+	-- transfer computation
+	signal lookNow_prev_shiftRegOutLook	: std_logic;
 
 	-- shiftRegOut
 	signal aclr_shiftRegOut	: std_logic;
@@ -179,14 +191,12 @@ begin
 	--		debug_out_q => debug_out_q	
 	--	);
 	
-bytes_to_bits_inst : bytes_to_bits PORT MAP (
-		clock	 => clk,
-		data	 => dataIn,
-		load	 => '1',
-		shiftout	 => bit_output
-	);
-
-
+	bytes_to_bits_inst : bytes_to_bits PORT MAP (
+			clock	 => clk,
+			data	 => dataIn,
+			load	 => load_dataIn,
+			shiftout	 => bit_dataIn
+		);
 
 	shiftRegIn_inst: TurboInterleaver_shiftRegIn PORT MAP (
 				clock => clk,
@@ -209,12 +219,18 @@ bytes_to_bits_inst : bytes_to_bits PORT MAP (
 
 
 	interleaver_inst: TurboInterleaver_Interleaver PORT MAP (
-			  clk    => clk,
-			  reset_async    => reset_async,
-			  flag_long => flag_long_interleaver,
-			  dataBufferIn 	=> dataBufferIn,
-			  dataBufferOut 	=> dataBufferOut
+			clk    => clk,
+			reset_async    => reset_async,
+			flag_long => flag_long_interleaver,
+			dataBufferIn 	=> dataBufferIn_interleaver,
+			dataBufferOut => dataBufferOut_interleaver
 		);
+
+	lookNowDelay1_inst : delay1 PORT MAP (
+			clock	 => clk,
+			shiftin	 => shiftout_shiftRegInLook,
+			shiftout	 => lookNow_prev_shiftRegOutLook
+	);
 
 	shiftRegOut_inst: TurboInterleaver_shiftRegOut PORT MAP (
 				clock => clk,
@@ -256,51 +272,43 @@ bytes_to_bits_inst : bytes_to_bits PORT MAP (
 	--look_now_out <= out_looknow_sig;
 	--flag_long_out <= out_long_sig;
 
-	shiftin_shiftRegInLook <= look_now_in;
-	shiftin_shiftRegInFlag <= flag_long_in;
-
-	qIn_shiftRegOut <= '0';
-	qIn_shiftRegOut2 <= '0';
-	
-
-	shiftin_shiftRegIn <= bit_output;
-
-	flag_long_interleaver <= shiftout_shiftRegInFlag;
+	-- counter for byte to bit module
 	byte_process : process (clk, counter_byte)
 	begin
 		if (clk'event and clk='1') then
 			if (counter_byte ="00001000") then 
-				dataInNext <= '1';
-				counter_byte <= "00000000";
+				if (look_now_in='1') then
+					dataInNext <= '1';
+					counter_byte <= "00000000";
+					load_dataIn <= '1';
+				end if;
 			else
 				dataInNext <= '0';
 				counter_byte <= counter_byte + "00000001";
+				load_dataIn <= '0';
 			end if;
 		end if;
 	end process;
+
+	shiftin_shiftRegInLook <= look_now_in;
+	shiftin_shiftRegInFlag <= flag_long_in;
+
+	shiftin_shiftRegIn <= bit_dataIn;
+
+	flag_long_interleaver <= shiftout_shiftRegInFlag;
 	
 	-- register input stream on look-now
-	regIn : process (clk, shiftout_shiftRegInLook, q_shiftRegIn)
-	begin
-		if (clk'event and clk='1') then
-			if (shiftout_shiftRegInLook='1') then
-				dataBufferIn(6143 DOWNTO 0) <= q_shiftRegIn(6143 DOWNTO 0);
-				
-			else
-				dataBufferIn(6143 DOWNTO 0) <= dataBufferIn(6143 DOWNTO 0);
-			end if;
-		else
-			dataBufferIn(6143 DOWNTO 0) <= dataBufferIn(6143 DOWNTO 0);
-		end if;
-	end process;
-	dataBufferOut2(6143 DOWNTO 0) <= dataBufferIn(6143 DOWNTO 0);
+	dataBufferIn_interleaver(6143 DOWNTO 0) <= q_shiftRegIn(6143 DOWNTO 0);
+	dataBufferOut2_interleaver(6143 DOWNTO 0) <= dataBufferIn_interleaver(6143 DOWNTO 0);
 
-	data_shiftRegOut(6143 DOWNTO 5088) <= dataBufferOut(6143 DOWNTO 5088) when (shiftout_shiftRegInFlag='1') else dataBufferOut(1055 DOWNTO 0);
-	data_shiftRegOut2(6143 DOWNTO 5088) <= dataBufferOut2(6143 DOWNTO 5088) when (shiftout_shiftRegInFlag='1') else dataBufferOut2(1055 DOWNTO 0);
-	data_shiftRegOut(5087 DOWNTO 0) <= dataBufferOut(5087 DOWNTO 0) when (shiftout_shiftRegInFlag='1') else qOut_shiftRegOut(5088 DOWNTO 1);
-	data_shiftRegOut2(5087 DOWNTO 0 ) <= dataBufferOut2(5087 DOWNTO 0) when (shiftout_shiftRegInFlag='1') else qOut_shiftRegOut2(5088 DOWNTO 1);
-	load_shiftRegOut <= shiftout_shiftRegInLook;
-	load_shiftRegOut2 <= shiftout_shiftRegInLook;
+	qIn_shiftRegOut <= '0';
+	qIn_shiftRegOut2 <= '0';
+	data_shiftRegOut(6143 DOWNTO 5088) <= dataBufferOut_interleaver(6143 DOWNTO 5088) when (shiftout_shiftRegInFlag='1') else dataBufferOut_interleaver(1055 DOWNTO 0);
+	data_shiftRegOut2(6143 DOWNTO 5088) <= dataBufferOut2_interleaver(6143 DOWNTO 5088) when (shiftout_shiftRegInFlag='1') else dataBufferOut2_interleaver(1055 DOWNTO 0);
+	data_shiftRegOut(5087 DOWNTO 0) <= dataBufferOut_interleaver(5087 DOWNTO 0) when (shiftout_shiftRegInFlag='1') else qOut_shiftRegOut(5088 DOWNTO 1);
+	data_shiftRegOut2(5087 DOWNTO 0 ) <= dataBufferOut2_interleaver(5087 DOWNTO 0) when (shiftout_shiftRegInFlag='1') else qOut_shiftRegOut2(5088 DOWNTO 1);
+	load_shiftRegOut 	<= '1' when (lookNow_prev_shiftRegOutLook='0' and shiftout_shiftRegInLook='1') else '0';
+	load_shiftRegOut2 	<= '1' when (lookNow_prev_shiftRegOutLook='0' and shiftout_shiftRegInLook='1') else '0';
 
 	shiftin_shiftRegOutFlag <= '0';
 	shiftin_shiftRegOutLook <= shiftout_shiftRegInLook when (shiftout_shiftRegInFlag='0') else '0';

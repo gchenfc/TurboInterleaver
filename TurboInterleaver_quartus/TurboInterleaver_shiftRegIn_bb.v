@@ -1,4 +1,4 @@
-// megafunction wizard: %LPM_SHIFTREG%
+// megafunction wizard: %LPM_SHIFTREG%VBB%
 // GENERATION: STANDARD
 // VERSION: WM1.0
 // MODULE: LPM_SHIFTREG 
@@ -17,7 +17,6 @@
 // 16.1.0 Build 196 10/24/2016 SJ Lite Edition
 // ************************************************************
 
-
 //Copyright (C) 2016  Intel Corporation. All rights reserved.
 //Your use of Intel Corporation's design tools, logic functions 
 //and other software and tools, and its AMPP partner logic 
@@ -33,10 +32,6 @@
 //authorized distributors.  Please refer to the applicable 
 //agreement for further details.
 
-
-// synopsys translate_off
-`timescale 1 ps / 1 ps
-// synopsys translate_on
 module TurboInterleaver_shiftRegIn (
 	aclr,
 	clock,
@@ -47,31 +42,6 @@ module TurboInterleaver_shiftRegIn (
 	input	  clock;
 	input	  shiftin;
 	output	[6143:0]  q;
-
-	wire [6143:0] sub_wire0;
-	wire [6143:0] q = sub_wire0[6143:0];
-
-	lpm_shiftreg	LPM_SHIFTREG_component (
-				.aclr (aclr),
-				.clock (clock),
-				.shiftin (shiftin),
-				.q (sub_wire0)
-				// synopsys translate_off
-				,
-				.aset (),
-				.data (),
-				.enable (),
-				.load (),
-				.sclr (),
-				.shiftout (),
-				.sset ()
-				// synopsys translate_on
-				);
-	defparam
-		LPM_SHIFTREG_component.lpm_direction = "RIGHT",
-		LPM_SHIFTREG_component.lpm_type = "LPM_SHIFTREG",
-		LPM_SHIFTREG_component.lpm_width = 6144;
-
 
 endmodule
 

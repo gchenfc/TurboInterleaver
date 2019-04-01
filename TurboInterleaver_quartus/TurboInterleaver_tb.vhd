@@ -14,7 +14,8 @@ ARCHITECTURE test OF TurboInterleaver_tb IS
 
 			clk, reset_async:			in std_logic;
 
-			dataIn:				in std_logic;
+			dataIn:				in std_logic_vector(7 DOWNTO 0);
+			dataInNext: out std_logic;
 			dataOut:				out std_logic;
 			dataOut2:				out std_logic;
 			
@@ -34,7 +35,8 @@ ARCHITECTURE test OF TurboInterleaver_tb IS
 
 	SIGNAL clk, reset_async: std_logic;
 
-	signal dataIn:				std_logic := '0';
+	signal dataIn:				std_logic_vector(7 DOWNTO 0) := (others => '0');
+	signal dataInNext:			std_logic := '0';
 	signal dataOut:				std_logic := '0';
 	signal dataOut2:				std_logic := '0';
 	
@@ -55,6 +57,7 @@ BEGIN
 		reset_async    => reset_async,
 
 		dataIn	=>	dataIn,
+		dataInNext => dataInNext,
 		dataOut	=>	dataOut,
 		dataOut2	=>	dataOut2,
 
@@ -71,8 +74,8 @@ BEGIN
 	--);
 
 	--dataIn <= q_tmp(0);
-	q_tmp <= (1 => '1', others => '0');
-	q_tmpa <= (2 => '1', others => '0');
+	q_tmp <= (0 => '1', others => '0');
+	q_tmpa <= (1 => '1', others => '0');
 
 	-- Specify 10 ns clock
 	clock: process
@@ -95,22 +98,24 @@ BEGIN
 			if (rising_edge(clk)) then
 				counter := counter_next;
 				if (streamBufferIn) then
-					if (counter = 0) then
+					--if (counter = 0) then
+					--	look_now_in <= '1';
+					--	if (parta) then
+					--		dataIn(7 DOWNTO 0) <= q_tmp(counter+7 DOWNTO counter);
+					--	else
+					--		dataIn(7 DOWNTO 0) <= q_tmpa(counter+7 DOWNTO counter);
+					--	end if;
+					--	counter_next := counter + 8;
+					if (counter < 6144) then 
 						look_now_in <= '1';
-						if (parta) then
-							dataIn <= q_tmp(counter);
-						else
-							dataIn <= q_tmpa(counter);
+						if (dataInNext='1') then
+							if (parta) then
+								dataIn(7 DOWNTO 0) <= q_tmp(counter+7 DOWNTO counter);
+							else
+								dataIn(7 DOWNTO 0) <= q_tmpa(counter+7 DOWNTO counter);
+							end if;
+							counter_next := counter + 8;
 						end if;
-						counter_next := counter + 1;
-					elsif (counter < 6144) then 
-						look_now_in <= '0';
-						if (parta) then
-							dataIn <= q_tmp(counter);
-						else
-							dataIn <= q_tmpa(counter);
-						end if;
-						counter_next := counter + 1;
 					else
 						--dataIn <= '0';
 						look_now_in <= '0';
@@ -123,7 +128,7 @@ BEGIN
 						end if;
 					end if;
 				elsif (streamBufferOut) then
-					dataIn <= '0';
+					dataIn <= "00000000";
 					look_now_in <= '0';
 					if (counter < 6144) then
 						q_out(counter) <= dataOut;
