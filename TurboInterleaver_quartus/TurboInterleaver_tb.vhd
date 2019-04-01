@@ -119,12 +119,18 @@ BEGIN
 					else
 						--dataIn <= '0';
 						look_now_in <= '0';
-						counter_next := 0;
-						if (parta) then
-							parta := false;
+						if (counter < 6152) then
+							counter_next := counter + 1;
 						else
-							streamBufferIn := false;
-							streamBufferOut := true;
+							counter_next := 0;
+							if (parta) then
+								parta := false;
+								--streamBufferIn := false;
+								--streamBufferOut := true;
+							else
+								streamBufferIn := false;
+								streamBufferOut := true;
+							end if;
 						end if;
 					end if;
 				elsif (streamBufferOut) then
@@ -137,6 +143,8 @@ BEGIN
 						--report "actual: " & std_logic'image(dataOut) & "\texpected: " & std_logic'image(ram_out(counter));
 						counter_next := counter + 1;
 					else
+						assert false
+							severity failure;
 						-- do nothing
 					end if;
 				else
@@ -144,16 +152,16 @@ BEGIN
 					look_now_in <= '0';
 				end if;
 				if (look_now_out = '1') then
-					counter_out := 0;
-				else
 					counter_out := counter_out + 1;
+				else
+					counter_out := 0;
 				end if;
 			end if;
 			counter_tmp <= std_logic_vector(to_unsigned(counter,13));
 			counter_output <= std_logic_vector(to_unsigned(counter_out,32));
 		end if;
 	end process;
-	flag_long_in <= '0';
+	flag_long_in <= '1';
 
 	-- Specify Test Vectors
 	stim: process is

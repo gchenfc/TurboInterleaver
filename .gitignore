@@ -3,3 +3,12 @@
 TurboInterleaver_quartus/*
 !*.v
 !*.vhd
+!*.qip
+!TurboInterleaver_quartus/TurboInterleaver*
+
+
+!TurboInterleaver_quartus/simulation
+TurboInterleaver_quartus/simulation/*
+!TurboInterleaver_quartus/simulation/modelsim
+TurboInterleaver_quartus/simulation/modelsim/*
+!TurboInterleaver_quartus/simulation/modelsim/*.do

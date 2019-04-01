@@ -6,7 +6,7 @@ entity TurboInterleaver is
 	port (
 		clk, reset_async:			in std_logic;
 		dataIn:				in std_logic_vector(7 DOWNTO 0);
-		dataInNext: out std_logic;
+		dataInNext: 		out std_logic := '0';
 		dataOut:				out std_logic;
 		dataOut2:				out std_logic;
 		
@@ -33,13 +33,14 @@ architecture arch1 of TurboInterleaver is
 	--END component;
 
 	component bytes_to_bits
-	PORT
-	(
-		clock		: IN STD_LOGIC ;
-		data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
-		load		: IN STD_LOGIC ;
-		shiftout		: OUT STD_LOGIC 
-	);
+		PORT
+		(
+			clock		: IN STD_LOGIC ;
+			data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+			load		: IN STD_LOGIC ;
+			shiftin		: IN STD_LOGIC ;
+			shiftout		: OUT STD_LOGIC 
+		);
 	end component;
 	
 	component TurboInterleaver_Interleaver
@@ -117,8 +118,13 @@ architecture arch1 of TurboInterleaver is
 	--signal debug_out_q				:	std_logic_vector (12 downto 0);
 
 	-- byte to bit serial
-	signal bit_dataIn: 		STD_LOGIC;
 	signal load_dataIn: 	std_logic;
+	signal byte_dataIn:		std_logic_vector(7 DOWNTO 0);
+	signal bit_dataIn: 		STD_LOGIC;
+	signal byte_flagIn:		std_logic_vector(7 DOWNTO 0) := "00000000";
+	signal bit_flagIn:		std_logic;
+	signal byte_lookIn:		std_logic_vector(7 DOWNTO 0) := "00000000";
+	signal bit_lookIn:		std_logic;
 
 	-- shiftRegIn
 	signal aclr_shiftRegIn	:	std_logic;
@@ -126,11 +132,11 @@ architecture arch1 of TurboInterleaver is
 	signal q_shiftRegIn	:	std_logic_vector(6143 DOWNTO 0) := (others => '0');
 	-- shiftRegInFlag
 	signal aclr_shiftRegInFlag	: std_logic;
-	signal shiftin_shiftRegInFlag : std_logic;
+	signal shiftin_shiftRegInFlag : std_logic := '0';
 	signal shiftout_shiftRegInFlag	: std_logic;
 	-- shiftRegInLook
 	signal aclr_shiftRegInLook	: std_logic;
-	signal shiftin_shiftRegInLook : std_logic;
+	signal shiftin_shiftRegInLook : std_logic := '0';
 	signal shiftout_shiftRegInLook	: std_logic;
 
 	-- interleaver
@@ -140,7 +146,7 @@ architecture arch1 of TurboInterleaver is
 	signal dataBufferOut2_interleaver : std_logic_vector(6143 DOWNTO 0) := (others => '0');
 
 	-- transfer computation
-	signal lookNow_prev_shiftRegOutLook	: std_logic;
+	signal lookNow_prev_shiftRegOutLook	: std_logic := '0';
 
 	-- shiftRegOut
 	signal aclr_shiftRegOut	: std_logic;
@@ -169,9 +175,7 @@ architecture arch1 of TurboInterleaver is
 	signal shiftin_shiftRegOutLook : std_logic;
 	signal shiftout_shiftRegOutLook	: std_logic;
 	
-	signal counter_byte: UNSIGNED(7 DOWNTO 0);
-		
-	
+	signal counter_byte: UNSIGNED(7 DOWNTO 0) := "00000110";
 	
 begin
 
@@ -193,9 +197,24 @@ begin
 	
 	bytes_to_bits_inst : bytes_to_bits PORT MAP (
 			clock	 => clk,
-			data	 => dataIn,
+			data	 => byte_dataIn,
 			load	 => load_dataIn,
+			shiftin  	=> '1',
 			shiftout	 => bit_dataIn
+		);
+	bytes_to_bits_Look_inst : bytes_to_bits PORT MAP (
+			clock	 => clk,
+			data	 => byte_lookIn,
+			load	 => load_dataIn,
+			shiftin  	=> '0',
+			shiftout	 => bit_lookIn
+		);
+	bytes_to_bits_Flag_inst : bytes_to_bits PORT MAP (
+			clock	 => clk,
+			data	 => byte_flagIn,
+			load	 => load_dataIn,
+			shiftin  	=> '0',
+			shiftout	 => bit_flagIn
 		);
 
 	shiftRegIn_inst: TurboInterleaver_shiftRegIn PORT MAP (
@@ -276,24 +295,30 @@ begin
 	byte_process : process (clk, counter_byte)
 	begin
 		if (clk'event and clk='1') then
-			if (counter_byte ="00001000") then 
+			if (counter_byte ="00000110") then 
 				if (look_now_in='1') then
 					dataInNext <= '1';
-					counter_byte <= "00000000";
-					load_dataIn <= '1';
+					load_dataIn <= '0';
+					counter_byte <= counter_byte + "00000001";
 				end if;
+			elsif (counter_byte="00000111") then
+				dataInNext <= '0';
+				load_dataIn <= '1';
+				counter_byte <= "00000000";
 			else
 				dataInNext <= '0';
-				counter_byte <= counter_byte + "00000001";
 				load_dataIn <= '0';
+				counter_byte <= counter_byte + "00000001";
 			end if;
 		end if;
 	end process;
-
-	shiftin_shiftRegInLook <= look_now_in;
-	shiftin_shiftRegInFlag <= flag_long_in;
+	byte_dataIn <= dataIn;
+	byte_lookIn <= (others => look_now_in);
+	byte_flagIn <= (others => flag_long_in);
 
 	shiftin_shiftRegIn <= bit_dataIn;
+	shiftin_shiftRegInLook <= bit_lookIn;
+	shiftin_shiftRegInFlag <= bit_flagIn;
 
 	flag_long_interleaver <= shiftout_shiftRegInFlag;
 	
