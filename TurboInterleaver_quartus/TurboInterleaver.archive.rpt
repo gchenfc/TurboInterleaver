@@ -1,0 +1,131 @@
+Archive Project report for TurboInterleaver
+Mon Apr 01 04:58:36 2019
+Quartus Prime Version 16.1.0 Build 196 10/24/2016 SJ Lite Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Archive Project Summary
+  3. Archive Project Messages
+  4. Files Archived
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2016  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel MegaCore Function License Agreement, or other 
+applicable license agreement, including, without limitation, 
+that your use is for the sole purpose of programming logic 
+devices manufactured by Intel and sold by Intel or its 
+authorized distributors.  Please refer to the applicable 
+agreement for further details.
+
+
+
++----------------------------------------------------------------+
+; Archive Project Summary                                        ;
++------------------------+---------------------------------------+
+; Archive Project Status ; Successful - Mon Apr 01 04:58:36 2019 ;
+; Revision Name          ; TurboInterleaver                      ;
+; Top-level Entity Name  ; TurboInterleaver                      ;
+; Family                 ; Cyclone IV E                          ;
++------------------------+---------------------------------------+
+
+
++--------------------------+
+; Archive Project Messages ;
++--------------------------+
+Info: File Set 'Custom' contains:
+    Info: Automatically detected source files
+    Info: Report files
+    Info: Project source and settings files
+Info: Archive will store files relative to the closest common parent directory
+Info (13213): Using common directory C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/
+Info: ----------------------------------------------------------
+Info: ----------------------------------------------------------
+Info: Generated archive 'C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver.qar'
+Info: ----------------------------------------------------------
+Info: ----------------------------------------------------------
+Info: Generated report 'TurboInterleaver.archive.rpt'
+Info (23030): Evaluation of Tcl script c:/intelfpga_lite/16.1/quartus/common/tcl/apps/qpm/qar.tcl was successful
+Info: Quartus Prime Shell was successful. 0 errors, 0 warnings
+    Info: Peak virtual memory: 736 megabytes
+    Info: Processing ended: Mon Apr 01 04:58:36 2019
+    Info: Elapsed time: 00:00:18
+    Info: Total CPU time (on all processors): 00:00:02
+
+
++--------------------------------------------------------------+
+; Files Archived                                               ;
++--------------------------------------------------------------+
+; File Name                                                    ;
++--------------------------------------------------------------+
+; bytes_to_bits.vhd                                            ;
+; c:/intelfpga_lite/16.1/quartus/bin64/assignment_defaults.qdf ;
+; delay1.cmp                                                   ;
+; delay1.qip                                                   ;
+; delay1.vhd                                                   ;
+; delay1_inst.vhd                                              ;
+; delay3.cmp                                                   ;
+; delay3.qip                                                   ;
+; delay3.vhd                                                   ;
+; delay3_inst.vhd                                              ;
+; inputTest.mif                                                ;
+; output_files/TurboInterleaver.asm.rpt                        ;
+; output_files/TurboInterleaver.eda.rpt                        ;
+; output_files/TurboInterleaver.fit.rpt                        ;
+; output_files/TurboInterleaver.fit.smsg                       ;
+; output_files/TurboInterleaver.fit.summary                    ;
+; output_files/TurboInterleaver.flow.rpt                       ;
+; output_files/TurboInterleaver.map.rpt                        ;
+; output_files/TurboInterleaver.map.summary                    ;
+; output_files/TurboInterleaver.pin                            ;
+; output_files/TurboInterleaver.sta.rpt                        ;
+; output_files/TurboInterleaver.sta.summary                    ;
+; outputTest.mif                                               ;
+; SDC1.sdc                                                     ;
+; test_input.cmp                                               ;
+; test_input.qip                                               ;
+; test_input.vhd                                               ;
+; test_input_byte.cmp                                          ;
+; test_input_byte.qip                                          ;
+; test_input_byte.vhd                                          ;
+; test_input_inst.vhd                                          ;
+; TurboInterleaver.qpf                                         ;
+; TurboInterleaver.qsf                                         ;
+; TurboInterleaver.vhd                                         ;
+; TurboInterleaver_Interleaver.vhd                             ;
+; TurboInterleaver_Interleaver_tb.vhd                          ;
+; TurboInterleaver_shiftRegIn.bsf                              ;
+; TurboInterleaver_shiftRegIn.qip                              ;
+; TurboInterleaver_shiftRegIn.v                                ;
+; TurboInterleaver_shiftRegIn_bb.v                             ;
+; TurboInterleaver_shiftRegInFlags.cmp                         ;
+; TurboInterleaver_shiftRegInFlags.qip                         ;
+; TurboInterleaver_shiftRegInFlags.vhd                         ;
+; TurboInterleaver_shiftRegInFlags_inst.vhd                    ;
+; TurboInterleaver_shiftRegOut.bsf                             ;
+; TurboInterleaver_shiftRegOut.qip                             ;
+; TurboInterleaver_shiftRegOut.v                               ;
+; TurboInterleaver_shiftRegOut_bb.v                            ;
+; TurboInterleaver_shiftRegOutFlags.cmp                        ;
+; TurboInterleaver_shiftRegOutFlags.qip                        ;
+; TurboInterleaver_shiftRegOutFlags.vhd                        ;
+; TurboInterleaver_shiftRegOutFlags_inst.vhd                   ;
+; TurboInterleaver_StateMachine.vhd                            ;
+; TurboInterleaver_tb.vhd                                      ;
+; Waveform.vwf                                                 ;
++--------------------------------------------------------------+
+
+

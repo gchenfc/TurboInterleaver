@@ -1,0 +1,66 @@
+Quartus Prime Archive log --	C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver.qarlog
+
+Archive:	C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver.qar
+Date:		Mon Apr 01 04:58:35 2019
+Quartus Prime		16.1.0 Build 196 10/24/2016 SJ Lite Edition
+
+	=========== Files Selected: ===========
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/SDC1.sdc
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver.qpf
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver.qsf
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_Interleaver.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_Interleaver_tb.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_StateMachine.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegIn.bsf
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegIn.qip
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegIn.v
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegInFlags.cmp
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegInFlags.qip
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegInFlags.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegInFlags_inst.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegIn_bb.v
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegOut.bsf
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegOut.qip
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegOut.v
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegOutFlags.cmp
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegOutFlags.qip
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegOutFlags.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegOutFlags_inst.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_shiftRegOut_bb.v
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_tb.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/Waveform.vwf
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/bytes_to_bits.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/delay1.cmp
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/delay1.qip
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/delay1.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/delay1_inst.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/delay3.cmp
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/delay3.qip
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/delay3.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/delay3_inst.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/inputTest.mif
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/outputTest.mif
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/output_files/TurboInterleaver.asm.rpt
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/output_files/TurboInterleaver.eda.rpt
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/output_files/TurboInterleaver.fit.rpt
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/output_files/TurboInterleaver.fit.smsg
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/output_files/TurboInterleaver.fit.summary
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/output_files/TurboInterleaver.flow.rpt
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/output_files/TurboInterleaver.map.rpt
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/output_files/TurboInterleaver.map.summary
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/output_files/TurboInterleaver.pin
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/output_files/TurboInterleaver.sta.rpt
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/output_files/TurboInterleaver.sta.summary
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/test_input.cmp
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/test_input.qip
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/test_input.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/test_input_byte.cmp
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/test_input_byte.qip
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/test_input_byte.vhd
+C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/test_input_inst.vhd
+c:/intelfpga_lite/16.1/quartus/bin64/assignment_defaults.qdf
+	======= Total: 55 files to archive =======
+
+	================ Status: ===============
+All files archived successfully.
