@@ -268,7 +268,7 @@ bytes_to_bits_inst : bytes_to_bits PORT MAP (
 	flag_long_interleaver <= shiftout_shiftRegInFlag;
 	byte_process : process (clk, counter_byte)
 	begin
-		if (clk='1') then
+		if (clk'event and clk='1') then
 			if (counter_byte ="00001000") then 
 				dataInNext <= '1';
 				counter_byte <= "00000000";
@@ -282,7 +282,7 @@ bytes_to_bits_inst : bytes_to_bits PORT MAP (
 	-- register input stream on look-now
 	regIn : process (clk, shiftout_shiftRegInLook, q_shiftRegIn)
 	begin
-		if (clk='1') then
+		if (clk'event and clk='1') then
 			if (shiftout_shiftRegInLook='1') then
 				dataBufferIn(6143 DOWNTO 0) <= q_shiftRegIn(6143 DOWNTO 0);
 				
