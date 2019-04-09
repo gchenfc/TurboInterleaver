@@ -287,6 +287,7 @@ begin
 		);
 
 	--in_looknow_sig <= look_now_in;
+	
 	--in_long_sig <= flag_long_in;
 	--look_now_out <= out_looknow_sig;
 	--flag_long_out <= out_long_sig;

@@ -1,6 +1,6 @@
 # -------------------------------------------------------------------------- #
 #
-# Copyright (C) 2016  Intel Corporation. All rights reserved.
+# Copyright (C) 2018  Intel Corporation. All rights reserved.
 # Your use of Intel Corporation's design tools, logic functions 
 # and other software and tools, and its AMPP partner logic 
 # functions, and any output files from any of the foregoing 
@@ -8,18 +8,17 @@
 # associated documentation or information are expressly subject 
 # to the terms and conditions of the Intel Program License 
 # Subscription Agreement, the Intel Quartus Prime License Agreement,
-# the Intel MegaCore Function License Agreement, or other 
-# applicable license agreement, including, without limitation, 
-# that your use is for the sole purpose of programming logic 
-# devices manufactured by Intel and sold by Intel or its 
-# authorized distributors.  Please refer to the applicable 
-# agreement for further details.
+# the Intel FPGA IP License Agreement, or other applicable license
+# agreement, including, without limitation, that your use is for
+# the sole purpose of programming logic devices manufactured by
+# Intel and sold by Intel or its authorized distributors.  Please
+# refer to the applicable agreement for further details.
 #
 # -------------------------------------------------------------------------- #
 #
 # Quartus Prime
-# Version 16.1.0 Build 196 10/24/2016 SJ Lite Edition
-# Date created = 09:45:21  February 26, 2019
+# Version 18.0.0 Build 614 04/24/2018 SJ Standard Edition
+# Date created = 00:56:22  April 09, 2019
 #
 # -------------------------------------------------------------------------- #
 #
@@ -37,48 +36,68 @@
 # -------------------------------------------------------------------------- #
 
 
-set_global_assignment -name FAMILY "Cyclone IV E"
-set_global_assignment -name DEVICE auto
+set_global_assignment -name FAMILY "Cyclone V"
+set_global_assignment -name DEVICE 5CEBA4F23C7
 set_global_assignment -name TOP_LEVEL_ENTITY TurboInterleaver
-set_global_assignment -name ORIGINAL_QUARTUS_VERSION 16.1.0
-set_global_assignment -name PROJECT_CREATION_TIME_DATE "09:45:21  FEBRUARY 26, 2019"
-set_global_assignment -name LAST_QUARTUS_VERSION "16.1.0 Lite Edition"
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.0.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "00:56:22  APRIL 09, 2019"
+set_global_assignment -name LAST_QUARTUS_VERSION "18.0.0 Standard Edition"
+set_global_assignment -name VHDL_FILE TurboInterleaver_tb.vhd
+set_global_assignment -name VHDL_FILE TurboInterleaver_StateMachine.vhd
+set_global_assignment -name VHDL_FILE TurboInterleaver_shiftRegOutFlags.vhd
+set_global_assignment -name QIP_FILE TurboInterleaver_shiftRegOutFlags.qip
+set_global_assignment -name SOURCE_FILE TurboInterleaver_shiftRegOutFlags.cmp
+set_global_assignment -name VERILOG_FILE TurboInterleaver_shiftRegOut.v
+set_global_assignment -name QIP_FILE TurboInterleaver_shiftRegOut.qip
+set_global_assignment -name VHDL_FILE TurboInterleaver_shiftRegInFlags.vhd
+set_global_assignment -name QIP_FILE TurboInterleaver_shiftRegInFlags.qip
+set_global_assignment -name SOURCE_FILE TurboInterleaver_shiftRegInFlags.cmp
+set_global_assignment -name VERILOG_FILE TurboInterleaver_shiftRegIn.v
+set_global_assignment -name QIP_FILE TurboInterleaver_shiftRegIn.qip
+set_global_assignment -name VHDL_FILE TurboInterleaver_Interleaver_tb.vhd
+set_global_assignment -name VHDL_FILE TurboInterleaver_Interleaver.vhd
+set_global_assignment -name VERILOG_FILE TurboInterleaver_array_indexing.v
+set_global_assignment -name VHDL_FILE TurboInterleaver.vhd
+set_global_assignment -name VHDL_FILE test_input_byte.vhd
+set_global_assignment -name QIP_FILE test_input_byte.qip
+set_global_assignment -name VHDL_FILE test_input.vhd
+set_global_assignment -name QIP_FILE test_input.qip
+set_global_assignment -name VHDL_FILE delay3.vhd
+set_global_assignment -name QIP_FILE delay3.qip
+set_global_assignment -name VHDL_FILE delay1.vhd
+set_global_assignment -name QIP_FILE delay1.qip
+set_global_assignment -name VHDL_FILE counter.vhd
+set_global_assignment -name QIP_FILE counter.qip
+set_global_assignment -name VHDL_FILE bytes_to_bits.vhd
+set_global_assignment -name QIP_FILE bytes_to_bits.qip
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
 set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH TurboInterleaver_tb -section_id eda_simulation
-set_global_assignment -name EDA_TEST_BENCH_NAME TurboInterleaver_Interleaver_tb -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id TurboInterleaver_Interleaver_tb
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME TurboInterleaver_Interleaver_tb -section_id TurboInterleaver_Interleaver_tb
+set_location_assignment PIN_D13 -to clk
+set_location_assignment PIN_H10 -to dataIn[7]
+set_location_assignment PIN_J19 -to dataIn[6]
+set_location_assignment PIN_H18 -to dataIn[5]
+set_location_assignment PIN_G18 -to dataIn[4]
+set_location_assignment PIN_C13 -to dataIn[3]
+set_location_assignment PIN_A13 -to dataIn[2]
+set_location_assignment PIN_H15 -to dataIn[1]
+set_location_assignment PIN_H16 -to dataIn[0]
+set_location_assignment PIN_F13 -to dataInNext
+set_location_assignment PIN_J17 -to dataOut
+set_location_assignment PIN_K16 -to dataOut2
+set_location_assignment PIN_G13 -to flag_long_in
+set_location_assignment PIN_B13 -to flag_long_out
+set_location_assignment PIN_G16 -to look_now_in
+set_location_assignment PIN_B12 -to look_now_out
+set_location_assignment PIN_A12 -to reset_async
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name EDA_TEST_BENCH_NAME TurboInterleaver_tb -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id TurboInterleaver_tb
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME TurboInterleaver_tb -section_id TurboInterleaver_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE TurboInterleaver_Interleaver_tb.vhd -section_id TurboInterleaver_Interleaver_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE TurboInterleaver_tb.vhd -section_id TurboInterleaver_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE test_input.vhd -section_id TurboInterleaver_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE inputTest.mif -section_id TurboInterleaver_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE outputTest.mif -section_id TurboInterleaver_tb
-set_global_assignment -name SDC_FILE SDC1.sdc
-set_global_assignment -name VHDL_FILE bytes_to_bits.vhd
-set_global_assignment -name MIF_FILE outputTest.mif
-set_global_assignment -name MIF_FILE inputTest.mif
-set_global_assignment -name VHDL_FILE TurboInterleaver_tb.vhd
-set_global_assignment -name VHDL_FILE TurboInterleaver.vhd
-set_global_assignment -name VHDL_FILE TurboInterleaver_StateMachine.vhd
-set_global_assignment -name VHDL_FILE TurboInterleaver_Interleaver.vhd
-set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform.vwf
-set_global_assignment -name VHDL_FILE TurboInterleaver_Interleaver_tb.vhd
-set_global_assignment -name QIP_FILE TurboInterleaver_shiftRegOut.qip
-set_global_assignment -name QIP_FILE TurboInterleaver_shiftRegIn.qip
-set_global_assignment -name QIP_FILE test_input.qip
-set_global_assignment -name QIP_FILE test_input_byte.qip
-set_global_assignment -name QIP_FILE TurboInterleaver_shiftRegOutFlags.qip
-set_global_assignment -name QIP_FILE TurboInterleaver_shiftRegInFlags.qip
-set_global_assignment -name QIP_FILE delay1.qip
-set_global_assignment -name QIP_FILE delay3.qip
+set_global_assignment -name SOURCE_FILE db/TurboInterleaver.cmp.rdb
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
