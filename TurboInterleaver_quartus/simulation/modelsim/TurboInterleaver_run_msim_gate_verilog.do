@@ -5,12 +5,11 @@ if {[file exists gate_work]} {
 vlib gate_work
 vmap work gate_work
 
-vlog -vlog01compat -work work +incdir+. {TurboInterleaver_min_1200mv_0c_fast.vo}
+vlog -vlog01compat -work work +incdir+. {TurboInterleaver.vo}
 
-vcom -93 -work work {C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/TurboInterleaver_tb.vhd}
-vcom -93 -work work {C:/Users/gdc9/Google Drive/SharedDocuments/ECE559/TurboInterleaver/TurboInterleaver_quartus/test_input.vhd}
+vlog -vlog01compat -work work +incdir+C:/Users/sl362/Documents/GitHub/TurboInterleaver/TurboInterleaver_quartus/output_files {C:/Users/sl362/Documents/GitHub/TurboInterleaver/TurboInterleaver_quartus/output_files/HardwareTesting_tb.v}
 
-vsim -t 1ps +transport_int_delays +transport_path_delays -L altera_ver -L cycloneive_ver -L gate_work -L work -voptargs="+acc"  TurboInterleaver_tb
+vsim -t 1ps +transport_int_delays +transport_path_delays -L altera_ver -L altera_lnsim_ver -L cyclonev_ver -L lpm_ver -L sgate_ver -L cyclonev_hssi_ver -L altera_mf_ver -L cyclonev_pcie_hip_ver -L gate_work -L work -voptargs="+acc"  HardwareTesting_tb
 
 add wave *
 view structure

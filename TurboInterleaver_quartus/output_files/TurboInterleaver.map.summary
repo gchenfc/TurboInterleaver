@@ -1,11 +1,11 @@
-Analysis & Synthesis Status : Successful - Tue Apr 09 01:08:05 2019
+Analysis & Synthesis Status : Successful - Mon Apr 29 01:46:42 2019
 Quartus Prime Version : 18.0.0 Build 614 04/24/2018 SJ Standard Edition
 Revision Name : TurboInterleaver
-Top-level Entity Name : TurboInterleaver
+Top-level Entity Name : HardwareTesting
 Family : Cyclone V
 Logic utilization (in ALMs) : N/A
-Total registers : 23596
-Total pins : 17
+Total registers : 23626
+Total pins : 29
 Total virtual pins : 0
 Total block memory bits : 12,288
 Total DSP Blocks : 0

@@ -1,0 +1,21 @@
+‘timescale 1 ns / 100 ps 
+module HardwareTesting_tb();
+	reg reset, clock; 
+	wire dataOut, dataOut2, flag_long_out, look_now_out, clk_out;
+	HardwareTesting HT_inst(clock, reset, dataOut, dataOut2, flag_long_out, look_now_out, clk_out);
+ 
+ 
+
+initial
+ begin
+	reset = 1'b0;
+	#20 reset = 1’b1;
+	$display($time, " << Coming out of reset >>");
+	$display(dataOut);
+ end 
+ 
+ always
+ #10 clock = ~clock; // every ten nanoseconds invert
+ 
+
+endmodule 

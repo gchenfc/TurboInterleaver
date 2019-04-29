@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(5CGXFC7C7F23) Path("C:/Users/sl362/Documents/GitHub/TurboInterleaver/TurboInterleaver_quartus/output_files/") File("TurboInterleaver.sof") MfrSpec(OpMask(1));
+		Device PartName(5CEBA4F23) Path("C:/Users/sl362/Documents/GitHub/TurboInterleaver/TurboInterleaver_quartus/output_files/") File("TurboInterleaver.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 
